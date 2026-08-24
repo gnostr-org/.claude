@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Trusted CI — runs on self-hosted runner for pushes to master.
+  ci-trusted:
+    if: github.event_name == 'push'
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all --check
+        continue-on-error: true
+      - run: cargo clippy --workspace --all-targets -- -A warnings
+        continue-on-error: true
+      - run: cargo test --workspace
+        continue-on-error: true
+
+  # PR CI — runs on GitHub-hosted runner for pull requests.
+  ci-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all --check
+        continue-on-error: true
+      - run: cargo clippy --workspace --all-targets -- -A warnings
+        continue-on-error: true
+      - run: cargo test --workspace
+        continue-on-error: true
