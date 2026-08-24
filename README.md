@@ -17,6 +17,7 @@ Most people publish a single `CLAUDE.md` and call it a setup. The thing that act
 | `.githooks/pre-commit`                                           | Git pre-commit hook for this repo that lints staged Markdown files with `markdownlint-cli2`.                                                                                                                                                                                                   |
 | `.github/workflows/markdownlint.yml`                             | CI job that runs `markdownlint-cli2` on every PR and push to `main`.                                                                                                                                                                                                                            |
 | `skills/new-repo/`                                               | A scaffolder skill: spins up a new repo with the right `CLAUDE.md`, `.gitignore`, quality gate, and release workflow. Scaffolds **web + Android**; iOS and compute ship as rule + agent packs (no scaffolder for them yet).                                                                   |
+| `skills/gnostr-github-automation/`                              | A reusable skill that packages selected `gnostr-org/gnostr` GitHub Actions workflows, composite actions, and skill docs as installable templates instead of enabling those repo-specific workflows in this repo itself.                                                                        |
 | `docs/`                                                          | On-demand reference the spine points to (full roster tables, the Phase-3 review checklist, the error-recovery table, PR template, scaling notes). Installed to `~/.claude/docs/`; loaded only when a stub references it.                                                                      |
 | `templates/`                                                     | Blank project `CLAUDE.md` templates (generic + compute) to copy into a new repo and fill in.                                                                                                                                                                                                  |
 | `examples/CLAUDE.example-web.md`                                 | A filled-in example so you can see what "done" looks like before you write your own.                                                                                                                                                                                                          |
@@ -39,7 +40,7 @@ cp rules/*.md     ~/.claude/rules/
 cp agents/*.md    ~/.claude/agents/
 cp -R agents-android agents-ios agents-compute ~/.claude/   # per-stack packs (scaffolder + per-repo overrides read these)
 cp hooks/*.sh     ~/.claude/hooks/ && chmod +x ~/.claude/hooks/*.sh
-cp -R skills/new-repo ~/.claude/skills/
+cp -R skills/* ~/.claude/skills/
 mkdir -p ~/.claude/docs && cp -R docs/* ~/.claude/docs/
 ```
 

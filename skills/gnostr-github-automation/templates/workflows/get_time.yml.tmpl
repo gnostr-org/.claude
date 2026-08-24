@@ -1,0 +1,32 @@
+name: Check UTC Hour Odd/Even
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [run-get-time-workflow]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  check_time:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate Odd/Even Status
+        id: time_check_hour
+        uses: ./.github/actions/calculate-odd-even
+
+      - name: Run if UTC Hour is EVEN
+        if: ${{ steps.time_check_hour.outputs.is_even == 'true' }}
+        run: |
+          echo "✅ Running job for an EVEN UTC hour."
+          # Add your even-hour steps here
+
+      - name: Run if UTC Hour is ODD
+        if: ${{ steps.time_check_hour.outputs.is_even != 'true' }}
+        run: |
+          echo "✅ Running job for an ODD UTC hour."
+          # Add your odd-hour steps here

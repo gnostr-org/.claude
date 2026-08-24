@@ -157,7 +157,7 @@ Four no-code extensions cover almost everything before you'd fork the binary: **
 
 ### 19.1 What is this project?
 
-- **One-paragraph description:** This repository _is_ a distributed Claude Code configuration, not an application: a stack-agnostic engineering spine (this `CLAUDE.md`, §1–18), platform rule packs (`rules/`), a 42-agent roster across four stacks (`agents/`, `agents-android/`, `agents-ios/`, `agents-compute/`), Claude hooks (`hooks/`), a repo git hook (`.githooks/pre-commit`) and markdown lint CI (`.github/workflows/markdownlint.yml`), and a repo-scaffolder skill (`skills/new-repo/`). Users copy it into `~/.claude/` and per-repo. The product is the configuration's correctness and internal consistency; nothing is compiled or deployed. Public, MIT: github.com/roadhero/claude-code-setup.
+- **One-paragraph description:** This repository _is_ a distributed Claude Code configuration, not an application: a stack-agnostic engineering spine (this `CLAUDE.md`, §1–18), platform rule packs (`rules/`), a 42-agent roster across four stacks (`agents/`, `agents-android/`, `agents-ios/`, `agents-compute/`), Claude hooks (`hooks/`), a repo git hook (`.githooks/pre-commit`) and markdown lint CI (`.github/workflows/markdownlint.yml`), and two reusable skills (`skills/new-repo/`, `skills/gnostr-github-automation/`). Users copy them into `~/.claude/` and per-repo. The product is the configuration's correctness and internal consistency; nothing is compiled or deployed. Public, MIT: github.com/roadhero/claude-code-setup.
 
 ### 19.2 Stack
 
