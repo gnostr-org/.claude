@@ -39,16 +39,23 @@ runs:
     - name: Post Nostr notification
       env:
         NSEC: ${{ inputs.nsec }}
+        POW: ${{ inputs.pow }}
+        DAMUS: ${{ inputs.damus }}
+        NOS: ${{ inputs.nos }}
+        JOB_URL: ${{ inputs.job_url }}
+        MATRIX_LABEL: ${{ inputs.matrix_label }}
+        STATUS: ${{ inputs.status }}
+        NJUMP_BASE: ${{ inputs.njump_base }}
       shell: bash
       run: |
         EVENT=$(gnostr \
           --nsec "$NSEC" \
-          -d "${{ inputs.pow }}" \
-          -r "${{ inputs.damus }}" \
-          -r "${{ inputs.nos }}" \
+          -d "$POW" \
+          -r "$DAMUS" \
+          -r "$NOS" \
           custom-event \
           -k 1 \
-          -c "[$GITHUB_REPOSITORY_ID](${{ inputs.job_url }}) (${{ inputs.matrix_label }}) ${{ inputs.status }}" \
+          -c "[$GITHUB_REPOSITORY_ID]($JOB_URL) ($MATRIX_LABEL) $STATUS" \
           -t "$GITHUB_REPOSITORY" \
           -t "$GITHUB_WORKFLOW" \
           -t "$GITHUB_WORKFLOW_SHA" \
@@ -77,6 +84,6 @@ runs:
 
         echo "$NOTE"
         echo "$EVENT"
-        gnostr query -i "$EVENT" -r "${{ inputs.damus }}" || true
-        gnostr query -i "$EVENT" -r "${{ inputs.nos }}" || true
-        echo "${{ inputs.njump_base }}/$NOTE"
+        gnostr query -i "$EVENT" -r "$DAMUS" || true
+        gnostr query -i "$EVENT" -r "$NOS" || true
+        echo "$NJUMP_BASE/$NOTE"
