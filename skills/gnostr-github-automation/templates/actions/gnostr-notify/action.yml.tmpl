@@ -48,6 +48,12 @@ runs:
         NJUMP_BASE: ${{ inputs.njump_base }}
       shell: bash
       run: |
+        printf -v EVENT_CONTENT '[%s](%s) (%s) %s' \
+          "$GITHUB_REPOSITORY_ID" \
+          "$JOB_URL" \
+          "$MATRIX_LABEL" \
+          "$STATUS"
+
         EVENT=$(gnostr \
           --nsec "$NSEC" \
           -d "$POW" \
@@ -55,7 +61,7 @@ runs:
           -r "$NOS" \
           custom-event \
           -k 1 \
-          -c "[$GITHUB_REPOSITORY_ID]($JOB_URL) ($MATRIX_LABEL) $STATUS" \
+          -c "$EVENT_CONTENT" \
           -t "$GITHUB_REPOSITORY" \
           -t "$GITHUB_WORKFLOW" \
           -t "$GITHUB_WORKFLOW_SHA" \

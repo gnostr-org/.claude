@@ -7,6 +7,8 @@ description: >
 outputs:
   is_even:
     description: '"true" if the current UTC hour is even, "false" if odd (always "true" on Windows)'
+    # The Linux/macOS step sets a non-empty output when it runs; on Windows that step
+    # is skipped, so the expression safely falls through to the Windows-specific output.
     value: ${{ steps.time_check_hour.outputs.is_even != '' && steps.time_check_hour.outputs.is_even || steps.time_check_hour_windows.outputs.is_even }}
 
 runs:
