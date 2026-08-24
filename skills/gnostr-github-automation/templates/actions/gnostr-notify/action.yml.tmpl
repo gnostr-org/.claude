@@ -62,8 +62,13 @@ runs:
           -t "$(gnostr --weeble)" \
           -t "$(gnostr --blockheight)" \
           -t "$(gnostr --wobble)" \
-          --hex || true)
+          --hex)
         export EVENT
+
+        [ -n "$EVENT" ] || {
+          echo "gnostr failed to produce an event" >&2
+          exit 1
+        }
 
         NOTE=$(gnostr convert-key -p note -k "$EVENT" || true)
         export NOTE
