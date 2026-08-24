@@ -37,10 +37,12 @@ runs:
   using: composite
   steps:
     - name: Post Nostr notification
+      env:
+        NSEC: ${{ inputs.nsec }}
       shell: bash
       run: |
         EVENT=$(gnostr \
-          --nsec "${{ inputs.nsec }}" \
+          --nsec "$NSEC" \
           -d "${{ inputs.pow }}" \
           -r "${{ inputs.damus }}" \
           -r "${{ inputs.nos }}" \
