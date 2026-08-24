@@ -13,6 +13,9 @@ inputs:
   matrix_label:
     description: 'Human-readable matrix label, e.g. "ubuntu-latest, stable"'
     required: true
+  nsec:
+    description: 'Private key used to sign the Nostr event; pass this from a GitHub Actions secret'
+    required: true
   pow:
     description: 'Proof-of-work difficulty target'
     required: false
@@ -37,8 +40,8 @@ runs:
       shell: bash
       run: |
         EVENT=$(gnostr \
-          --nsec "$(gnostr --hash "$GITHUB_REPOSITORY_ID")" \
-          -d ${{ inputs.pow }} \
+          --nsec "${{ inputs.nsec }}" \
+          -d "${{ inputs.pow }}" \
           -r "${{ inputs.damus }}" \
           -r "${{ inputs.nos }}" \
           custom-event \

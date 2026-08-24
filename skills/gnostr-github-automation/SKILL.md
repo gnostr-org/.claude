@@ -20,7 +20,7 @@ These files are adapted from `gnostr-org/gnostr` so they fit this repo's skill-b
 - Do not install the upstream `.github/workflows/*.yml` files wholesale into an unrelated repo.
 - Copy only the templates you need and strip the `.tmpl` suffix when installing them.
 - Review every trigger, secret, relay URL, and runner assumption before enabling a workflow.
-- `gnostr-notify` assumes the `gnostr` CLI is already available in the job.
+- `gnostr-notify` assumes the `gnostr` CLI is already available in the job and that you pass a real private key via a GitHub Actions secret.
 - The `gnostr` and `gnostr-chat-ci-updates` skill templates are reference docs; adapt repo-specific commands and nested sub-skill links before publishing them.
 
 ## Procedure
