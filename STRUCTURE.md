@@ -15,6 +15,7 @@
 │   ├── guard-commit.sh       # PreToolUse(Bash): block AI attribution, secrets, force-push, non-human committer
 │   └── format.sh             # PostToolUse(Edit|Write): auto-format by extension, all stacks
 ├── skills/new-repo/          # scaffolder
+├── skills/gnostr-github-automation/  # gnostr GitHub Actions/action+workflow+skill templates
 └── docs/                     # on-demand reference (roster tables, §4 review checklist, error-recovery table, PR template, scaling) — the spine points here
 
 Per-repo overrides (drop into <repo>/.claude/agents/ — override the 15 globals by canonical name):
@@ -40,7 +41,7 @@ cp rules/*.md           ~/.claude/rules/
 cp agents/*.md          ~/.claude/agents/
 cp -R agents-android agents-ios agents-compute ~/.claude/   # per-stack packs (the new-repo skill + per-repo overrides read these)
 cp hooks/*.sh           ~/.claude/hooks/ && chmod +x ~/.claude/hooks/*.sh
-cp -R skills/new-repo    ~/.claude/skills/
+cp -R skills/*           ~/.claude/skills/
 mkdir -p ~/.claude/docs && cp -R docs/* ~/.claude/docs/   # on-demand reference the spine's ~/.claude/docs/* pointers resolve to
 
 # per repo:

@@ -1,0 +1,95 @@
+name: gnostr Nostr Notification
+description: >
+  Posts a CI job-status notification as a kind-1 Nostr event to configured
+  relays via gnostr, then queries the event back and prints a njump.me link.
+
+inputs:
+  status:
+    description: 'Human-readable status label, e.g. "Failed!", "Cancelled!", "Success!"'
+    required: true
+  job_url:
+    description: 'URL to the current GitHub Actions job run'
+    required: true
+  matrix_label:
+    description: 'Human-readable matrix label, e.g. "ubuntu-latest, stable"'
+    required: true
+  nsec:
+    description: 'Private key used to sign the Nostr event; pass this from a GitHub Actions secret'
+    required: true
+  pow:
+    description: 'Proof-of-work difficulty target'
+    required: false
+    default: '16'
+  damus:
+    description: 'Primary relay WebSocket URL'
+    required: false
+    default: 'wss://relay.damus.io'
+  nos:
+    description: 'Secondary relay WebSocket URL'
+    required: false
+    default: 'wss://nos.lol'
+  njump_base:
+    description: 'Base URL for the human-readable Nostr event link'
+    required: false
+    default: 'https://njump.me'
+
+runs:
+  using: composite
+  steps:
+    - name: Post Nostr notification
+      env:
+        NSEC: ${{ inputs.nsec }}
+        POW: ${{ inputs.pow }}
+        DAMUS: ${{ inputs.damus }}
+        NOS: ${{ inputs.nos }}
+        JOB_URL: ${{ inputs.job_url }}
+        MATRIX_LABEL: ${{ inputs.matrix_label }}
+        STATUS: ${{ inputs.status }}
+        NJUMP_BASE: ${{ inputs.njump_base }}
+      shell: bash
+      run: |
+        printf -v EVENT_CONTENT '[%s](%s) (%s) %s' \
+          "$GITHUB_REPOSITORY_ID" \
+          "$JOB_URL" \
+          "$MATRIX_LABEL" \
+          "$STATUS"
+
+        EVENT=$(gnostr \
+          --nsec "$NSEC" \
+          -d "$POW" \
+          -r "$DAMUS" \
+          -r "$NOS" \
+          custom-event \
+          -k 1 \
+          -c "$EVENT_CONTENT" \
+          -t "$GITHUB_REPOSITORY" \
+          -t "$GITHUB_WORKFLOW" \
+          -t "$GITHUB_WORKFLOW_SHA" \
+          -t "$GITHUB_WORKFLOW_REF" \
+          -t "$GITHUB_REF" \
+          -t "$GITHUB_RUN_ID" \
+          -t "gnostr" \
+          -t "gnostr-bot" \
+          -t "$GITHUB_REPOSITORY_OWNER" \
+          -t "$(date +%s)" \
+          -t "$RUNNER_ENVIRONMENT" \
+          -t "$RUNNER_OS" \
+          -t "$(gnostr --weeble)" \
+          -t "$(gnostr --blockheight)" \
+          -t "$(gnostr --wobble)" \
+          --hex)
+        export EVENT
+
+        [ -n "$EVENT" ] || {
+          echo "gnostr failed to produce an event" >&2
+          exit 1
+        }
+
+        NOTE=$(gnostr convert-key -p note -k "$EVENT" || true)
+        export NOTE
+
+        echo "$NOTE"
+        echo "$EVENT"
+        gnostr query -i "$EVENT" -r "$DAMUS" || true
+        gnostr query -i "$EVENT" -r "$NOS" || true
+        echo "$NJUMP_BASE/$NOTE"
